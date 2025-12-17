@@ -345,7 +345,7 @@ button {
 
 @media (max-width: 1000px) {
     .feature .feat {
-        width: 90%;
+        min-width: 95% ;
         margin: 1px auto;
     }
 }
