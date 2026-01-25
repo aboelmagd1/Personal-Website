@@ -1,0 +1,99 @@
+/* Responsive Design Improvements */
+
+/* Base container adjustments */
+.container {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Mobile Menu Improvements */
+@media (max-width: 767px) {
+    .header .nav .container {
+        padding: 10px 15px;
+    }
+
+    .header .nav h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Slider adjustments */
+    .slider p {
+        font-size: 28px !important;
+    }
+
+    .slider .slider-intro h1 {
+        font-size: 16px !important;
+    }
+
+    /* Section titles */
+    h1 {
+        font-size: 24px !important;
+        text-align: center;
+    }
+
+    /* Feature cards */
+    .feature .feat {
+        min-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .feature .feat p {
+        font-size: 16px;
+    }
+
+    /* About section */
+    .about .info {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: calc(100% - 20px);
+    }
+
+    /* Skills section */
+    .my-skills .my-skills-first p {
+        padding-right: 0;
+    }
+
+    .my-skills .my-skills-secand h3 {
+        font-size: 16px;
+    }
+
+    /* Portfolio Grid */
+    .port-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+
+    .project-card {
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    /* Contact Form */
+    .con-form {
+        width: 100% !important;
+        padding: 0 10px;
+    }
+
+    .con-form input,
+    .con-form textarea {
+        width: 100%;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .feature .feat {
+        flex: 1 1 calc(50% - 20px);
+        min-width: 300px;
+    }
+
+    .port-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* Fix for horizontal scroll on some mobile devices */
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
