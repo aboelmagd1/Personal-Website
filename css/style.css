@@ -477,7 +477,9 @@ button {
 /* start feature */
 
 .feature {
-    background-color: var(--card-bg);
+    background-color: var(--bg-primary);
+    position: relative;
+    z-index: 10;
 }
 
 .feature .container {
@@ -492,14 +494,17 @@ button {
 .feature .feat {
     flex: 1 1 calc(33.333% - 40px);
     min-width: 320px;
-    background-color: var(--card-bg);
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    padding: 30px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+    padding: 35px 30px;
     margin: 1px auto;
     box-sizing: border-box;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 3px solid transparent;
     position: relative;
 }
 
@@ -508,8 +513,10 @@ body.dark-mode .feature .feat {
 }
 
 .feature .feat:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(46, 139, 87, 0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(55, 210, 128, 0.12);
+    border-bottom: 3px solid var(--primary-green);
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .feature .feat h1 {
@@ -1024,11 +1031,32 @@ div.exp-secand h2 {
 
 .comment p {
     color: var(--text-primary);
-    font-size: clamp(1.5rem, 3vw, 2.2rem);
-    font-weight: 400;
-    font-style: auto;
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+    font-weight: 600;
+    font-style: italic;
     letter-spacing: 0.5px;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    position: relative;
+    display: inline-block;
+}
+
+.comment p::before,
+.comment p::after {
+    content: '"';
+    color: var(--primary-green);
+    font-size: 1.5em;
+    vertical-align: text-bottom;
+    line-height: 0;
+    opacity: 0.7;
+}
+
+.comment h3 {
+    color: var(--primary-green) !important;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .comment h3 {
