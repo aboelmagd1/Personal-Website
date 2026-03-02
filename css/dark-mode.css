@@ -364,6 +364,11 @@ body.dark-mode .footer-social ul li a:hover img {
     transition: fill 0.3s ease;
 }
 
+.nav h2 {
+
+    margin-left: 5px;
+}
+
 .dark-mode-toggle:hover svg {
     fill: #1a1a1a;
 }
