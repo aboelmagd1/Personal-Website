@@ -395,19 +395,22 @@ button {
 }
 
 .hero-headline {
-    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-size: clamp(2rem, 5vw, 4rem);
     font-weight: 700;
     color: var(--soft-white);
     margin-bottom: 0.5rem;
     letter-spacing: -0.02em;
+    line-height: 1.2;
 }
 
 .hero-tagline {
-    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-size: clamp(1.1rem, 2.5vw, 1.8rem);
     color: var(--primary-green-light);
-    height: 40px;
+    height: auto;
+    min-height: 40px;
     margin-bottom: 2rem;
     font-weight: 300;
+    line-height: 1.4;
 }
 
 /* Typing effect cursor */
@@ -641,7 +644,16 @@ div.imgscenter {
 
 @media (max-width: 998px) {
     .about .my-img {
-        display: none;
+        width: 100%;
+        display: block;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    div.imgscenter {
+        min-height: 350px;
+        border-radius: 12px;
     }
 
     .about .info {
