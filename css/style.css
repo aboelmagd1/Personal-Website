@@ -2023,6 +2023,11 @@ body.dark-mode .slider .wight h1 {
 }
 
 @media (max-width: 991px) {
+    .hero-cover {
+        background-attachment: scroll;
+        background-position: top center;
+    }
+
     .header .nav .dropdown-menu {
         position: static;
         opacity: 1;
