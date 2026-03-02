@@ -387,11 +387,6 @@ button {
     z-index: 3;
     text-align: center;
     padding: 2rem;
-    background: rgba(26, 26, 26, 0.4);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .hero-headline {
@@ -405,11 +400,12 @@ button {
 
 .hero-tagline {
     font-size: clamp(1.1rem, 2.5vw, 1.8rem);
-    color: var(--primary-green-light);
+    color: #ffffff;
     height: auto;
     min-height: 40px;
     margin-bottom: 2rem;
-    font-weight: 300;
+    font-style: italic;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
     line-height: 1.4;
 }
 
