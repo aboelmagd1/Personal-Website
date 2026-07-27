@@ -82,28 +82,51 @@ const initDarkModeToggle = () => {
     firstDiv.appendChild(langBtn);
 
     langBtn.addEventListener('click', () => {
-        const targetFile = isAr ? 'index.html' : 'index-ar.html';
+        const currentPath = window.location.pathname;
+        let targetFile;
+        if (currentPath.includes('know-me-more')) {
+            targetFile = isAr ? 'know-me-more.html' : 'know-me-more-ar.html';
+        } else {
+            targetFile = isAr ? 'index.html' : 'index-ar.html';
+        }
         window.location.href = targetFile;
     });
 };
 
-const initScrollToTop = () => {
-    // Check if the button already exists to prevent duplicates
-    if (document.getElementById('scrollTopBtn')) return;
+const initScrollWidget = () => {
+    // Remove old single scrollTopBtn if present
+    const oldBtn = document.getElementById('scrollTopBtn');
+    if (oldBtn) oldBtn.remove();
 
-    const scrollTopBtn = document.createElement('button');
-    scrollTopBtn.id = 'scrollTopBtn';
-    scrollTopBtn.innerHTML = '↑';
-    scrollTopBtn.setAttribute('aria-label', 'Scroll to top');
-    document.body.appendChild(scrollTopBtn);
+    if (document.querySelector('.scroll-widget')) return;
 
-    window.addEventListener('scroll', () => {
-        scrollTopBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
-    });
+    const isAr = document.documentElement.lang === 'ar';
+    const widget = document.createElement('div');
+    widget.className = 'scroll-widget';
+    widget.innerHTML = `
+        <button id="scrollToTopBtn" title="${isAr ? 'الانتقال للأعلى' : 'Scroll to Top'}" aria-label="Scroll to top">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+        </button>
+        <button id="scrollToBottomBtn" title="${isAr ? 'الانتقال لأسفل' : 'Scroll to Bottom'}" aria-label="Scroll to bottom">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+    `;
+    document.body.appendChild(widget);
 
-    scrollTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    const scrollTopBtn = document.getElementById('scrollToTopBtn');
+    const scrollBottomBtn = document.getElementById('scrollToBottomBtn');
+
+    if (scrollTopBtn) {
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    if (scrollBottomBtn) {
+        scrollBottomBtn.addEventListener('click', () => {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        });
+    }
 };
 
 const initTypingEffect = () => {
@@ -155,6 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initScrollReveal();
     initDarkModeToggle();
-    initScrollToTop();
+    initScrollWidget();
     initTypingEffect();
 });

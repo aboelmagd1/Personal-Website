@@ -375,8 +375,9 @@ body.dark-mode .footer-social ul li a:hover img {
 .dark-mode-toggle svg {
     width: 20px;
     height: 20px;
-    fill: #37D280;
-    transition: fill 0.3s ease;
+    stroke: #38CF7A;
+    fill: none;
+    transition: stroke 0.3s ease;
 }
 
 .nav h2 {
@@ -385,7 +386,7 @@ body.dark-mode .footer-social ul li a:hover img {
 }
 
 .dark-mode-toggle:hover svg {
-    fill: #1a1a1a;
+    stroke: #1a1a1a;
 }
 
 body.dark-mode .dark-mode-toggle {
@@ -393,7 +394,7 @@ body.dark-mode .dark-mode-toggle {
 }
 
 body.dark-mode .dark-mode-toggle svg {
-    fill: #37D280;
+    stroke: #38CF7A;
 }
 
 body.dark-mode .dark-mode-toggle:hover {
@@ -401,7 +402,7 @@ body.dark-mode .dark-mode-toggle:hover {
 }
 
 body.dark-mode .dark-mode-toggle:hover svg {
-    fill: #1a1a1a;
+    stroke: #1a1a1a;
 }
 
 /* Scroll to Top Button in Dark Mode */
