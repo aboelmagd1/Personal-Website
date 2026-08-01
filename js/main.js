@@ -81,7 +81,11 @@ const initDarkModeToggle = () => {
     langBtn.innerText = isAr ? 'English' : 'العربية';
     firstDiv.appendChild(langBtn);
 
-    langBtn.addEventListener('click', () => {
+    const switchLanguage = (e) => {
+        if (e) e.preventDefault();
+        const targetLang = isAr ? 'en' : 'ar';
+        localStorage.setItem('preferred_lang', targetLang);
+        
         const currentPath = window.location.pathname;
         let targetFile;
         if (currentPath.includes('know-me-more')) {
@@ -90,6 +94,11 @@ const initDarkModeToggle = () => {
             targetFile = isAr ? 'index.html' : 'index-ar.html';
         }
         window.location.href = targetFile;
+    };
+
+    langBtn.addEventListener('click', switchLanguage);
+    document.querySelectorAll('.lang-switcher-btn').forEach(btn => {
+        btn.addEventListener('click', switchLanguage);
     });
 };
 

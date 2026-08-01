@@ -1,5 +1,18 @@
 window.ALL_POSTS_DATA = [
   {
+    "id": "static_zajal_0",
+    "category": "zajal",
+    "categoryLabelAr": "زجل",
+    "categoryLabelEn": "زجل (Zajal)",
+    "title": "",
+    "date": "أغسطس 2026",
+    "content": "ان يشكو المرأ من كل ملمة مرة عيلة فإنه لعبد ذميم\nلابد من صبر فتصبر ليكون الصبر فيك مع الرضى نديم",
+    "authorAr": "بقلم محمود أبو المجد",
+    "authorEn": "By Mahmoud Aboelmagd"
+  },
+
+
+  {
     "id": "excel_51",
     "category": "prose",
     "categoryLabelAr": "نثر",
@@ -10,6 +23,7 @@ window.ALL_POSTS_DATA = [
     "authorAr": "بقلم محمود أبو المجد",
     "authorEn": "By Mahmoud Aboelmagd"
   },
+
   {
     "id": "static_1",
     "category": "zajal",
@@ -100,9 +114,9 @@ window.ALL_POSTS_DATA = [
   },
   {
     "id": "static_9",
-    "category": "zajal",
-    "categoryLabelAr": "زجل",
-    "categoryLabelEn": "زجل (Zajal)",
+    "category": "prose",
+    "categoryLabelAr": "نثر",
+    "categoryLabelEn": "نثر (Prose)",
     "title": "",
     "date": "2026",
     "content": "رأيتها وقد ارتدت ثوبها الأحمر فقلت :\nكرز فيه الغيم قد كان وما بين الشفاه والثوب بيض الغمام يطوف ، صورة من الحسن قد رسمت كانّها بكل يد فنانة قد مرسومه .",
@@ -182,7 +196,7 @@ window.ALL_POSTS_DATA = [
     "categoryLabelEn": "زجل (Zajal)",
     "title": "",
     "date": "2026",
-    "content": "هل يمكن ان أعيد الدهر الذي مرق ، فأمحو بعض الذكريات أضعها النفق ، أعود فاكون شخص غير الذي ارق ، احمل بعض علم معي وأجمع معه ما اتفق .",
+    "content": "هل يمكن ان أعيد الدهر الذي مرق \n فأمحو بعض الذكريات أضعها النفق ، أعود فاكون شخص غير الذي ارق \n احمل بعض علم معي وأجمع معه ما اتفق .",
     "authorAr": "بقلم محمود أبو المجد",
     "authorEn": "By Mahmoud Aboelmagd"
   },
@@ -237,7 +251,7 @@ window.ALL_POSTS_DATA = [
     "categoryLabelEn": "نثر (Prose)",
     "title": "",
     "date": "2026",
-    "content": "رفت معلومه مش مفيده لكن غريبه ان في بمصر موالد لغير المسلمين وان كان في مولد مشهور في دمنهور اسمه مولد ابو حصيره كان مولد لليهود 😮 وكان بيجيه يهود ولكن اتلغى من زمان",
+    "content": " معلومه مش مفيده لكن غريبه ان في بمصر موالد لغير المسلمين وان كان في مولد مشهور في دمنهور اسمه مولد ابو حصيره كان مولد لليهود 😮 وكان بيجيه يهود ولكن اتلغى من زمان",
     "authorAr": "بقلم محمود أبو المجد",
     "authorEn": "By Mahmoud Aboelmagd"
   },
@@ -441,9 +455,9 @@ window.ALL_POSTS_DATA = [
   },
   {
     "id": "static_40",
-    "category": "zajal",
-    "categoryLabelAr": "زجل",
-    "categoryLabelEn": "زجل (Zajal)",
+    "category": "prose",
+    "categoryLabelAr": "نثر",
+    "categoryLabelEn": "نثر (Prose)",
     "title": "",
     "date": "2026",
     "content": "اعتقد مما جانه الإنسان من تأثره بثقافة العصر فكرة ان تكون غريبا ، لماذا ، تبدأ الفكره من الذات حيث هى جانب الحكم ومبتغى السعى اليها لترضى وأتم الرضى لها هو تحقيق اكبر متعة باقل تكلفة فمعرفة الناس ووصلهم تفرض عليك تكاليف الود والوصال وكونك ترتبط باحدهم له حق الصديق والأخوة في الدين فإذا كنت غريبا نفضت يدك عن هذا كله وكنت منفكا عن قيد مكارم الأخلاق وعرف الرفاق",

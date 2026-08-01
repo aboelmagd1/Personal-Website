@@ -1,14 +1,23 @@
-/* Writings Posts Filter, Interactive Add/Edit/Delete & Copy HTML Logic */
+/* Writings Posts Filter, Search, Pagination & Interactive Add/Edit/Delete Logic */
 
 document.addEventListener('DOMContentLoaded', () => {
     const filterBtns = document.querySelectorAll('.writings-filter-btn');
     const postsFeed = document.querySelector('.posts-feed');
     const isAr = document.documentElement.lang === 'ar';
 
+    const searchInput = document.getElementById('writingsSearchInput');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+    let currentPage = 1;
+    const PAGE_SIZE = 12;
+
     let editingPostId = null;
     let editingElement = null;
 
-    // Toast notification for copying HTML
+    // Toast notification
     const showToast = (message) => {
         let toast = document.getElementById('copyToast');
         if (!toast) {
@@ -24,50 +33,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     };
 
-    // Helper to generate clean HTML for copying
-    const getCleanPostHTML = (category, title, date, contentText, author) => {
-        const categoryTag = category === 'prose' ? (isAr ? 'نثر' : 'نثر (Prose)') : (isAr ? 'زجل' : 'زجل (Zajal)');
-        let bodyContent = '';
+    // Helper to generate clean JS Object for all_posts_data.js
+    const getCleanPostJSObject = (category, title, date, contentText, author, id) => {
+        const categoryLabelAr = category === 'prose' ? 'نثر' : 'زجل';
+        const categoryLabelEn = category === 'prose' ? 'نثر (Prose)' : 'زجل (Zajal)';
+        const authorAr = author || (isAr ? 'بقلم محمود أبو المجد' : 'By Mahmoud Aboelmagd');
+        const authorEn = 'By Mahmoud Aboelmagd';
 
-        if (category === 'zajal') {
-            const lines = contentText.split('\n').map(l => l.trim()).filter(Boolean).join('<br>\n                            ');
-            bodyContent = `<div class="poem-verses">\n                            ${lines}\n                        </div>`;
-        } else {
-            const paragraphs = contentText.split('\n').map(p => p.trim()).filter(Boolean).map(p => `<p>${p}</p>`).join('\n                        ');
-            bodyContent = paragraphs;
-        }
+        const postObj = {
+            id: id || `custom_${Date.now()}`,
+            category: category || 'prose',
+            categoryLabelAr: categoryLabelAr,
+            categoryLabelEn: categoryLabelEn,
+            title: title || '',
+            date: date || '',
+            content: contentText || '',
+            authorAr: authorAr,
+            authorEn: authorEn
+        };
 
-        const authorStr = author || (isAr ? 'بقلم محمود أبو المجد' : 'By Mahmoud Aboelmagd');
-        const titleStr = title ? `<h3 class="post-title">${title}</h3>\n    ` : '';
-
-        return `<!-- Post -->
-<article class="post-card reveal" data-category="${category}">
-    <div class="post-header">
-        <span class="post-category-tag">${categoryTag}</span>
-        <span class="post-date">${date}</span>
-    </div>
-    ${titleStr}<div class="post-body">
-        ${bodyContent}
-    </div>
-    <div class="post-footer">
-        <span class="post-author">${authorStr}</span>
-    </div>
-</article>`;
+        return JSON.stringify(postObj, null, 2) + ',';
     };
 
-    const copyPostHTML = (category, title, date, contentText, author) => {
-        const htmlCode = getCleanPostHTML(category, title, date, contentText, author);
-        navigator.clipboard.writeText(htmlCode).then(() => {
-            showToast(isAr ? 'تم نسخ كود HTML للحافظة بنجاح!' : 'HTML Code Copied to Clipboard!');
+    const copyPostJS = (category, title, date, contentText, author, id) => {
+        const jsCode = getCleanPostJSObject(category, title, date, contentText, author, id);
+        navigator.clipboard.writeText(jsCode).then(() => {
+            showToast(isAr ? 'تم نسخ كود المنشور (JS) للحافظة بنجاح!' : 'Post JS Code Copied to Clipboard!');
         }).catch(() => {
-            // Fallback for older browsers
             const textarea = document.createElement('textarea');
-            textarea.value = htmlCode;
+            textarea.value = jsCode;
             document.body.appendChild(textarea);
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-            showToast(isAr ? 'تم نسخ كود HTML للحافظة بنجاح!' : 'HTML Code Copied to Clipboard!');
+            showToast(isAr ? 'تم نسخ كود المنشور (JS) للحافظة بنجاح!' : 'Post JS Code Copied to Clipboard!');
         });
     };
 
@@ -113,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const authorText = post.author || (isAr ? 'بقلم محمود أبو المجد' : 'By Mahmoud Aboelmagd');
-
         const titleHTML = post.title ? `<h3 class="post-title">${post.title}</h3>` : '';
 
         article.innerHTML = `
@@ -128,7 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="post-footer">
                 <span class="post-author">${authorText}</span>
                 <div class="post-actions">
-                    <button class="btn-copy-post">${isAr ? 'نسخ الكود' : 'Copy HTML'}</button>
+                    <button class="btn-copy-text-post">${isAr ? 'نسخ النص' : 'Copy Text'}</button>
+                    <button class="btn-copy-post">${isAr ? 'نسخ الكود' : 'Copy JS Code'}</button>
                     <button class="btn-edit-post">${isAr ? 'تعديل' : 'Edit'}</button>
                     <button class="btn-delete-post">${isAr ? 'حذف' : 'Delete'}</button>
                 </div>
@@ -136,13 +135,40 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         // Attach action handlers
+        const copyTextBtn = article.querySelector('.btn-copy-text-post');
         const copyBtn = article.querySelector('.btn-copy-post');
         const editBtn = article.querySelector('.btn-edit-post');
         const deleteBtn = article.querySelector('.btn-delete-post');
 
+        if (copyTextBtn) {
+            copyTextBtn.addEventListener('click', () => {
+                const textContent = post.content || extractTextContent(article.querySelector('.post-body'));
+                const authorStr = post.author || (isAr ? 'بقلم محمود أبو المجد' : 'By Mahmoud Aboelmagd');
+                const titleStr = post.title ? `${post.title}\n\n` : '';
+                const siteUrl = isAr 
+                    ? 'https://aboelmagd1.github.io/Personal-Website/know-me-more-ar.html' 
+                    : 'https://aboelmagd1.github.io/Personal-Website/know-me-more.html';
+
+                const readMoreText = isAr ? '📖 اقرأ المزيد على موقعي:' : '📖 Read more on my website:';
+                const fullCopiedText = `${titleStr}${textContent}\n\n— ${authorStr}\n\n${readMoreText}\n${siteUrl}`;
+
+                navigator.clipboard.writeText(fullCopiedText).then(() => {
+                    showToast(isAr ? 'تم نسخ النص ورابط الموقع بنجاح!' : 'Post Text & Website Link Copied!');
+                }).catch(() => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = fullCopiedText;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showToast(isAr ? 'تم نسخ النص ورابط الموقع بنجاح!' : 'Post Text & Website Link Copied!');
+                });
+            });
+        }
+
         if (copyBtn) {
             copyBtn.addEventListener('click', () => {
-                copyPostHTML(post.category, post.title, post.date, post.content, post.author);
+                copyPostJS(post.category, post.title, post.date, post.content, post.author, post.id);
             });
         }
 
@@ -181,50 +207,124 @@ document.addEventListener('DOMContentLoaded', () => {
         element.remove();
     };
 
-    // Initialize dataset if posts-feed is empty or has placeholder posts
-    const initPostsFeed = () => {
-        if (!postsFeed) return;
+    // 2. Filter & Search Dataset Logic
+    const getFilteredPostsList = () => {
+        const storedPosts = getStoredPosts().slice().reverse();
+        const basePosts = window.ALL_POSTS_DATA || [];
+        const combined = [...storedPosts, ...basePosts];
 
-        // Render dataset items if available
-        if (window.ALL_POSTS_DATA && window.ALL_POSTS_DATA.length > 0) {
-            postsFeed.innerHTML = '';
-            window.ALL_POSTS_DATA.forEach(postItem => {
-                renderSinglePost(postItem, false);
-            });
-        }
-
-        // Prepend stored custom posts from LocalStorage
-        const storedPosts = getStoredPosts();
-        storedPosts.reverse().forEach(post => renderSinglePost(post, true));
-    };
-
-    initPostsFeed();
-
-    // 2. Filter Button Listener
-    const filterPosts = () => {
-        const activeBtn = document.querySelector('.writings-filter-btn.active');
-        if (!activeBtn) return;
-        const selectedFilter = activeBtn.getAttribute('data-filter');
-        const allPosts = document.querySelectorAll('.post-card');
-
-        allPosts.forEach(card => {
-            const category = card.getAttribute('data-category');
-            if (selectedFilter === 'all' || category === selectedFilter) {
-                card.style.display = 'flex';
-                card.classList.add('reveal', 'active');
-            } else {
-                card.style.display = 'none';
+        return combined.filter(post => {
+            // Category Filter
+            if (currentFilter !== 'all' && post.category !== currentFilter) {
+                return false;
             }
+            // Search Query Filter
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase().trim();
+                const contentText = (post.content || '').toLowerCase();
+                const titleText = (post.title || '').toLowerCase();
+                const dateText = (post.date || '').toLowerCase();
+                if (!contentText.includes(q) && !titleText.includes(q) && !dateText.includes(q)) {
+                    return false;
+                }
+            }
+            return true;
         });
     };
 
+    const renderFeed = (resetPage = false) => {
+        if (!postsFeed) return;
+        if (resetPage) currentPage = 1;
+
+        const filtered = getFilteredPostsList();
+        const visibleCount = currentPage * PAGE_SIZE;
+        const visiblePosts = filtered.slice(0, visibleCount);
+
+        postsFeed.innerHTML = '';
+
+        if (visiblePosts.length === 0) {
+            postsFeed.innerHTML = `<p style="text-align: center; padding: 40px; color: var(--text-secondary); font-size: 1.1rem;">
+                ${isAr ? 'لم يتم العثور على منشورات تطابق كلمات البحث.' : 'No writings found matching your search.'}
+            </p>`;
+            if (loadMoreContainer) loadMoreContainer.style.display = 'none';
+            return;
+        }
+
+        visiblePosts.forEach(post => {
+            renderSinglePost(post, false);
+        });
+
+        if (loadMoreContainer) {
+            if (visibleCount < filtered.length) {
+                loadMoreContainer.style.display = 'block';
+                loadMoreContainer.innerHTML = `<p style="color: var(--text-secondary); font-size: 0.95rem; font-weight: 500;">⬇️ ${isAr ? 'جاري تحميل المزيد من المنشورات تلقائياً...' : 'Loading more posts automatically...'}</p>`;
+            } else {
+                loadMoreContainer.style.display = 'none';
+            }
+        }
+    };
+
+    // Initial feed render
+    renderFeed(true);
+
+    // Filter Buttons Listeners
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            filterPosts();
+            currentFilter = btn.getAttribute('data-filter') || 'all';
+            renderFeed(true);
         });
     });
+
+    // Search Input Listener
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderFeed(true);
+        });
+    }
+
+    // Automatic Infinite Scroll Logic (IntersectionObserver + Scroll Event)
+    let isLoadingMore = false;
+    const loadNextBatch = () => {
+        if (isLoadingMore) return;
+        const filtered = getFilteredPostsList();
+        if (currentPage * PAGE_SIZE < filtered.length) {
+            isLoadingMore = true;
+            currentPage++;
+            renderFeed(false);
+            setTimeout(() => { isLoadingMore = false; }, 300);
+        }
+    };
+
+    if (loadMoreContainer && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && loadMoreContainer.style.display !== 'none') {
+                    loadNextBatch();
+                }
+            });
+        }, { rootMargin: '300px' });
+
+        observer.observe(loadMoreContainer);
+    }
+
+    window.addEventListener('scroll', () => {
+        if (loadMoreContainer && loadMoreContainer.style.display !== 'none') {
+            const rect = loadMoreContainer.getBoundingClientRect();
+            if (rect.top <= window.innerHeight + 400) {
+                loadNextBatch();
+            }
+        }
+    });
+
+    // Load More Button Manual Click Fallback
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => {
+            loadNextBatch();
+        });
+    }
 
     // Scroll to Top & Scroll to Bottom Buttons Logic
     const scrollTopBtn = document.getElementById('scrollToTopBtn');
@@ -326,7 +426,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             if (editingElement) {
-                // Updating an existing post
                 updatePostDOM(editingElement, postData);
 
                 if (editingPostId) {
@@ -340,14 +439,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     saveStoredPosts(posts);
                 }
             } else {
-                // Creating a new post
                 const posts = getStoredPosts();
                 posts.push(postData);
                 saveStoredPosts(posts);
-                renderSinglePost(postData, true);
             }
 
-            filterPosts();
+            renderFeed(true);
             resetModalForm();
 
             addPostModal.classList.remove('open');
